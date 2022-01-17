@@ -17,53 +17,43 @@ class BinaryTree {
    * the length of the shortest path from the root to a leaf. */
 
   minDepth() {
-    if (!this.root) return 0;
-    let queueToVisit = [this.root];
-    let count = 1;
-    while (queueToVisit.length) {
-      let current = queueToVisit.shift();
-      if (current.left) {
-        queueToVisit.push(current.left);
-      }
-      if (current.right) {
-        queueToVisit.push(current.right);
-      }
-      if (current.left || current.right) {
-        count++;
-      }
-      if (!current.left && !current.right) {
-        return count;
-      }
-    }
-    return count;
+    if (this.root == null) return 0;
+    return this._minDepth(this.root);
+  }
+  _minDepth(node = this.root) {
+    if (node.left == null && node.right == null) return 1;
+    return Math.min(this._minDepth(node.left), this._minDepth(node.right)) + 1;
   }
 
   /** maxDepth(): return the maximum depth of the tree -- that is,
    * the length of the longest path from the root to a leaf. */
 
   maxDepth() {
-    if (!this.root) return 0;
-    let stackToVisit = [this.root];
-    let count = 1;
-    while (stackToVisit.length) {
-      let current = stackToVisit.pop();
-      if (current.left) {
-        stackToVisit.push(current.left);
-      }
-      if (current.right) {
-        stackToVisit.push(current.right);
-      }
-      if (current.left || current.right) {
-        count++;
-      }
-    }
-    return count;
+    if (this.root == null) return 0;
+    return this._maxDepth(this.root);
   }
 
+  _maxDepth(node = this.root) {
+    if (node.left == null && node.right == null) return 1;
+    return Math.max(this._maxDepth(node.left), this._maxDepth(node.right)) + 1;
+  }
   /** maxSum(): return the maximum sum you can obtain by traveling along a path in the tree.
    * The path doesn't need to start at the root, but you can't visit a node more than once. */
 
-  maxSum() {}
+  maxSum() {
+    let result = 0;
+
+    function maxSumHelper(node) {
+      if (node === null) return 0;
+      const leftSum = maxSumHelper(node.left);
+      const rightSum = maxSumHelper(node.right);
+      result = Math.max(result, node.val + leftSum + rightSum);
+      return Math.max(0, leftSum + node.val, rightSum + node.val);
+    }
+
+    maxSumHelper(this.root);
+    return result;
+  }
 
   /** nextLarger(lowerBound): return the smallest value in the tree
    * which is larger than lowerBound. Return null if no such value exists. */
